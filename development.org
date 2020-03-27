@@ -1,0 +1,5 @@
+* [2020-03-27 Fri]
+
+The board is now outputting spi values as required and it seems to be working well.
+
+The nrf board is not connected up yet, so nothing is being received. That will be the next step.
