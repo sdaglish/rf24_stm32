@@ -3,3 +3,92 @@
 The board is now outputting spi values as required and it seems to be working well.
 
 The nrf board is not connected up yet, so nothing is being received. That will be the next step.
+
+* [2020-03-28 Sat]
+
+
+I have now created the whole of the rf begin function, and as for as I
+can tell, it's working as expected.  When I try it with no module
+connected, the spi functions are being called as I would expect, and
+then when I connect the module, it keeps returning 0x0E at each read
+and write spi call.  I've looked into this, and this value seems to be
+the status register value, so as far as I can tell, everything is
+working as expected.  I need to test a few more function calls to see
+if things are working as expected, but so far so good.
+
+
+
+* [2020-03-29 Sun]
+
+Yesterday I spent far too long trying to figure out what the nrf
+module was not responding in the way that I expected.  The module was
+replying with 0x0E no matter what I was requesting or telling it to
+do.  After almost pulling out my hair, it seems that the issue was
+that the stm was pulling the CE pin high after each byte was being
+written, rather than at the end of the complete command!  This meant
+that the module always thought that the data being sent was the first
+byte of a command, and the module will always sent the status regester
+(which on boot is 0x0E).
+ 
+It turns out that this is the normal functioning of the SPI NSS setup,
+which to me seems really stupid.  I disabled this, but the CS pin was
+getting stuck low and I was unable to manually pull the CS pin high or
+low.  Therefore, I change the CS pin from A5 to A12 and this fixed the
+problem.  Now when I read or write to the module's register's, the
+module is replying back with data that looks to be much more correct.
+
+
+* [2020-03-30 Mon]
+  
+* [2020-03-31 Tue]
+
+Fuck me that was hard work!
+
+For most of yesterday and a huge chunck of today, I was trying to get
+the module to work correctly.  As far as I could tell, the code module
+was being setup correctly, and it was responding to information as
+expected.  However, the module just would not receive any data.
+
+After a long time, I decided to give the stm module a bit of a rest
+and work with 2 Arduinos instead using the rf library. This still did
+not work and I could not get the two to communicate together at all.
+At this point, I had to give up for the day (yesterday).
+
+Earlier today, I soldered caps to the nrf modules in the hope that it
+was a simple power issue.  Nope, no improvement.
+
+After, I tried correcting the two modules to an external 5v power
+supply (still using the two Arduinos), and this seemed to work! Yep,
+I'm now getting pinging going on between the sender and the reciever,
+with information showing up on the serial port as expected, showing
+the signal being recieved, and the reciever pinging back. So now I'm
+starting to get somewhere!
+
+Looking at the serial output, everything is working and both the
+sender and receiver are showing up the correct information.
+
+I then replaced the receiving arduino with the stm board, and nothing
+works.  Checking the connections, everything is connected as it should
+be.  Checking the spi signals, it would seem that the module is
+connected, is receiving the signal, and is replying as expected
+
+This means that something is wrong with my stm32 code.
+
+I spent ages going through the signals and code and as far as I could
+tell, the stm board is sending and receiving the correct data.
+
+I then start playing around with the spi speeds... And the thing starts to work as expected!!!
+
+I am now seeing data going from the arduino board, throught the nrf
+modules, and into the stm board, where it is toggling an led, just as
+expected. It looks like upping the spi speed from its slowest setting
+to around 500kHz is enough for the nrf module to setup correctly, and
+to receive data as needed.
+
+Another issue that I was having, is that I need to completely read the
+rx buffer from the module before any other data can be received.  I
+was not reading all of the data before, so some of the data was still
+left over, which seemed to stop the module from recieving new data.
+
+I'm now going to write up the nrf code as a seperate module.
+

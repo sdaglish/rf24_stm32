@@ -25,7 +25,6 @@
 #include "stm32f0xx_hal_gpio.h"
 #include "stm32f0xx_hal_spi.h"
 #include <stdint.h>
-#include <string.h>
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -51,7 +50,7 @@ typedef enum {
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define _BV(x) (1<<(x))
+ #define _BV(x) (1<<(x))
 #define rf24_max(a,b) (a>b?a:b)
 #define rf24_min(a,b) (a<b?a:b)
 /* USER CODE END PD */
@@ -66,13 +65,7 @@ SPI_HandleTypeDef hspi1;
 
 /* USER CODE BEGIN PV */
 bool rf_begin(void);
-uint8_t write_register(uint8_t reg, uint8_t value);
 void rf_setPALevel(uint8_t level);
-void rf_openWritingPipe(const uint8_t* address);
-void rf_openReadingPipe(uint8_t child, const uint8_t* address);
-void rf_startListening(void);
-bool rf_available(uint8_t* pipe_num);
-
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -118,48 +111,18 @@ int main(void)
   MX_GPIO_Init();
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
-  // bool role = 0;
+  bool role = 0;
   bool radioNumber = 0;
-   uint8_t addresses[][6] = {"1Node","2Node"};
-  // uint8_t addresses[][6] = {"edoN1","edoN2"};
-  const uint8_t address[6] = "00001";
+  char addresses[][6] = {"1Node","2Node"};
   
- uint8_t spi_txbuf[33];
- uint8_t spi_rxbuf[33];
- 
-
   if(rf_begin() == true)
     {
-
+      HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_SET);
+      rf_setPALevel(RF24_PA_LOW);
       if  (radioNumber == 0)
 	{
-	   rf_openWritingPipe(addresses[0]);
-	    rf_openReadingPipe(1, addresses[1]);
-
-	  //rf_openReadingPipe(0, address);
-	    //  rf_setPALevel(RF24_PA_HIGH);
-	  rf_startListening();
-	  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_SET);
-	  while (1)
-	    {
-	    if (rf_available(NULL) == 1) {
-	      while(rf_available(NULL) == 1)
-		{
-	      HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_RESET); // NSS1 low
-	      for (int i=0; i<33; i++)
-		{
-		  spi_txbuf[i] = 0xFF;
-		}
-	      spi_txbuf[0] = R_RX_PAYLOAD;
-	 
-	      HAL_SPI_TransmitReceive(&hspi1, spi_txbuf, spi_rxbuf, 33, 1000);
-	      HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_SET); // NSS1 low
-	      write_register(NRF_STATUS, _BV(RX_DR) | _BV(MAX_RT) | _BV(TX_DS));
-		}
-              HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_9); 
-            }
-          }
-        }
+	  rf_openWritePipe(address[0]);
+	}
     }
 
   /* USER CODE END 2 */
@@ -191,8 +154,8 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
-  RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL2;
-  RCC_OscInitStruct.PLL.PREDIV = RCC_PREDIV_DIV16;
+  RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL12;
+  RCC_OscInitStruct.PLL.PREDIV = RCC_PREDIV_DIV1;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();
@@ -233,8 +196,8 @@ static void MX_SPI1_Init(void)
   hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
   hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
-  hspi1.Init.NSS = SPI_NSS_SOFT;
-  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_16;
+  hspi1.Init.NSS = DISABLE;
+  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_256;
   hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
@@ -280,14 +243,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  GPIO_InitStruct.Pin = GPIO_PIN_12 | GPIO_PIN_11;
+  GPIO_InitStruct.Pin = GPIO_PIN_12;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   HAL_GPIO_WritePin( GPIOA, GPIO_PIN_12, GPIO_PIN_SET ); // NSS1 low
-  HAL_GPIO_WritePin( GPIOA, GPIO_PIN_11, GPIO_PIN_RESET ); // NSS1 low
 }
 
 /* USER CODE BEGIN 4 */
@@ -297,7 +259,7 @@ uint8_t write_register(uint8_t reg, uint8_t value)
   uint8_t status = 0;
   uint8_t spi_txbuf[2];
   uint8_t spi_rxbuf[2];
-
+ 
   HAL_GPIO_WritePin( GPIOA, GPIO_PIN_12, GPIO_PIN_RESET ); // NSS1 low
   spi_txbuf[0] = W_REGISTER | (REGISTER_MASK & reg);
   spi_txbuf[1] = value;
@@ -306,25 +268,6 @@ uint8_t write_register(uint8_t reg, uint8_t value)
 
   HAL_GPIO_WritePin( GPIOA, GPIO_PIN_12, GPIO_PIN_SET ); // NSS1 low
   status = spi_rxbuf[0];
-
-  return status;
-}
- 
-uint8_t write_register_buf(uint8_t reg, const uint8_t* buf, uint8_t buf_size)
-{
-  uint8_t status = 0;
-  uint8_t spi_txbuf[2];
-  uint8_t spi_rxbuf[2];
- 
-  spi_txbuf[0] = W_REGISTER | (REGISTER_MASK & reg);
-
-  HAL_GPIO_WritePin( GPIOA, GPIO_PIN_12, GPIO_PIN_RESET ); // NSS1 low
-
-  HAL_SPI_TransmitReceive(&hspi1, spi_txbuf, spi_rxbuf, 1, 1000);
-  status = spi_rxbuf[0];
-  HAL_SPI_Transmit(&hspi1, (uint8_t*)buf, buf_size, 1000);
-
-  HAL_GPIO_WritePin( GPIOA, GPIO_PIN_12, GPIO_PIN_SET ); // NSS1 low
 
   return status;
 }
@@ -366,13 +309,8 @@ void setRetries(uint8_t delay, uint8_t count)
 
 uint32_t txDelay;
 bool p_variant; /* False for RF24L01 and true for RF24L01P */
-bool dynamic_payloads_enabled; /**< Whether dynamic payloads are enabled. */
-uint8_t addr_width = 5;
-uint8_t payload_size = 32;
-uint8_t pipe0_reading_address[5]; /**< Last address set on pipe 0 for reading. */
-static const uint8_t child_pipe[] = {RX_ADDR_P0, RX_ADDR_P1, RX_ADDR_P2, RX_ADDR_P3, RX_ADDR_P4, RX_ADDR_P5};
-static const uint8_t child_payload_size[] = {RX_PW_P0, RX_PW_P1, RX_PW_P2, RX_PW_P3, RX_PW_P4, RX_PW_P5};
-static const uint8_t child_pipe_enable[] = {ERX_P0, ERX_P1, ERX_P2, ERX_P3, ERX_P4, ERX_P5};
+    bool dynamic_payloads_enabled; /**< Whether dynamic payloads are enabled. */
+
 
 bool setDataRate(rf24_datarate_e speed)
 {
@@ -425,7 +363,6 @@ void toggle_features(void)
   HAL_GPIO_WritePin( GPIOA, GPIO_PIN_12, GPIO_PIN_RESET ); // NSS1 low
   spi_txbuf[0] = ACTIVATE;
   spi_txbuf[1] = 0x73;
-
   
   HAL_SPI_TransmitReceive(&hspi1, spi_txbuf, spi_rxbuf, 2, 1000);
 
@@ -486,7 +423,7 @@ void powerUp(void)
 bool rf_begin(void)
 {
   uint8_t setup =  0;
-pipe0_reading_address[0]=0;
+
   // don't think that the two below are actually needed. Should
   // probably be removed
   
@@ -499,7 +436,7 @@ pipe0_reading_address[0]=0;
     // Technically we require 4.5ms + 14us as a worst case. We'll just call it 5ms for good measure.
     // WARNING: Delay is based on P-variant whereby non-P *may* require different timing.
   // delay(5);
-  HAL_Delay(5);
+  HAL_Delay(1000 );
 
   // Reset NRF_CONFIG and enable 16-bit CRC.
     write_register(NRF_CONFIG, 0x0C);
@@ -572,112 +509,6 @@ void rf_setPALevel(uint8_t level)
     }
 
     write_register(RF_SETUP, setup |= level);    // Write it to the chip
-}
-
-void rf_openWritingPipe(const uint8_t* address)
-{
-    // Note that AVR 8-bit uC's store this LSB first, and the NRF24L01(+)
-    // expects it LSB first too, so we're good.
-    write_register_buf(RX_ADDR_P0, address, addr_width);
-    write_register_buf(TX_ADDR, address, addr_width);
-
-    //const uint8_t max_payload_size = 32;
-    //write_register(RX_PW_P0,rf24_min(payload_size,max_payload_size));
-    write_register(RX_PW_P0, payload_size);
-}
-
-void rf_openReadingPipe(uint8_t child, const uint8_t* address)
-{
-    // If this is pipe 0, cache the address.  This is needed because
-    // openWritingPipe() will overwrite the pipe 0 address, so
-    // startListening() will have to restore it.
-    if (child == 0) {
-      // memcpy(pipe0_reading_address, address, addr_width);
-      for (int i=0; i<addr_width; i++)
-	{
-	  pipe0_reading_address[i] = address[i];
-	}
-    }
-    if (child <= 6) {
-        // For pipes 2-5, only write the LSB
-        if (child < 2) {
-            write_register_buf(child_pipe[child], address, addr_width);
-        } else {
-            write_register_buf(child_pipe[child], address, 1);
-        }
-        write_register(child_payload_size[child], payload_size);
-
-        // Note it would be more efficient to set all of the bits for all open
-        // pipes at once.  However, I thought it would make the calling code
-        // more simple to do it this way.
-        write_register(EN_RXADDR, read_register(EN_RXADDR) | _BV(child_pipe_enable[child]));
-
-    }
-}
-
-#define HIGH 1
-#define LOW 0
-
-void ce(uint8_t state)
-{
-  // push the ce to a given state
-  // ce = pa11
-  if (state == HIGH)
-    {
-      HAL_GPIO_WritePin( GPIOA, GPIO_PIN_11, GPIO_PIN_SET ); // NSS1 low
-    }
-  else if (state == LOW)
-    {
-      HAL_GPIO_WritePin( GPIOA, GPIO_PIN_11, GPIO_PIN_RESET ); // NSS1 low
-    }
-}
-   
-void closeReadingPipe(uint8_t pipe)
-{
-    write_register(EN_RXADDR, read_register(EN_RXADDR) & ~_BV(child_pipe_enable[pipe]));
-}
-
-void rf_startListening(void)
-{
-    write_register(NRF_CONFIG, read_register(NRF_CONFIG) | _BV(PRIM_RX));
-    write_register(NRF_STATUS, _BV(RX_DR) | _BV(TX_DS) | _BV(MAX_RT));
-    ce(HIGH);
-    // Restore the pipe0 adddress, if exists
-    if (pipe0_reading_address[0] > 0) {
-        write_register_buf(RX_ADDR_P0, pipe0_reading_address, addr_width);
-    } else {
-        closeReadingPipe(0);
-    }
-
-    // Flush buffers
-    //flush_rx();
-    if (read_register(FEATURE) & _BV(EN_ACK_PAY)) {
-        flush_tx();
-    }
-
-    // Go!
-    //delayMicroseconds(100);
-
-    HAL_Delay(100);
-}
-
-uint8_t get_status(void) { return spiTrans(RF24_NOP); }
-
-bool rf_available(uint8_t* pipe_num)
-{
-    if (!(read_register(FIFO_STATUS) & _BV(RX_EMPTY))) {
-
-        // If the caller wants the pipe number, include that
-        if (pipe_num) {
-            uint8_t status = get_status();
-            *pipe_num = (status >> RX_P_NO) & 0x07;
-        }
-        return 1;
-    }
-
-    return 0;
-
-
 }
 
 /* USER CODE END 4 */

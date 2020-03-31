@@ -2,3 +2,4 @@
 **/*.d
 **/*.lst
 build/*
+.clangd/*
