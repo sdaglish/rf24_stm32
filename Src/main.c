@@ -114,47 +114,37 @@ int main(void)
   /* USER CODE BEGIN 2 */
   // bool role = 0;
   bool radioNumber = 0;
-   uint8_t addresses[][6] = {"1Node","2Node"};
-  // uint8_t addresses[][6] = {"edoN1","edoN2"};
-  const uint8_t address[6] = "00001";
-  
- uint8_t spi_txbuf[33];
- uint8_t spi_rxbuf[33];
- 
+  uint8_t addresses[][6] = {"1Node", "2Node"};
 
-  if(rf_begin() == true)
-    {
+  uint8_t spi_txbuf[33];
+  uint8_t spi_rxbuf[33];
 
-      if  (radioNumber == 0)
-	{
-	   rf_openWritingPipe(addresses[0]);
-	    rf_openReadingPipe(1, addresses[1]);
+  if (rf_begin() == true) {
 
-	  //rf_openReadingPipe(0, address);
-	    //  rf_setPALevel(RF24_PA_HIGH);
-	  rf_startListening();
-	  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_SET);
-	  while (1)
-	    {
-	    if (rf_available(NULL) == 1) {
-	      while(rf_available(NULL) == 1)
-		{
-	      HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_RESET); // NSS1 low
-	      for (int i=0; i<33; i++)
-		{
-		  spi_txbuf[i] = 0xFF;
-		}
-	      spi_txbuf[0] = R_RX_PAYLOAD;
-	 
-	      HAL_SPI_TransmitReceive(&hspi1, spi_txbuf, spi_rxbuf, 33, 1000);
-	      HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_SET); // NSS1 low
-	      write_register(NRF_STATUS, _BV(RX_DR) | _BV(MAX_RT) | _BV(TX_DS));
-		}
-              HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_9); 
-            }
-          }
+    if (radioNumber == 0) {
+      rf_openWritingPipe(addresses[0]);
+      rf_openReadingPipe(1, addresses[1]);
+
+      rf_startListening();
+      HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_SET);
+      while (1) {
+	if (rf_available(NULL) == 1) {
+	  while (rf_available(NULL) == 1) {
+	    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_RESET); // NSS1 low
+	    for (int i = 0; i < 33; i++) {
+	      spi_txbuf[i] = 0xFF;
+	    }
+	    spi_txbuf[0] = R_RX_PAYLOAD;
+
+	    HAL_SPI_TransmitReceive(&hspi1, spi_txbuf, spi_rxbuf, 33, 1000);
+	    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_SET); // NSS1 low
+	    write_register(NRF_STATUS, _BV(RX_DR) | _BV(MAX_RT) | _BV(TX_DS));
+	  }
+	  HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_9);
         }
+      }
     }
+  }
 
   /* USER CODE END 2 */
 
