@@ -107,8 +107,7 @@ int main(void)
       while (1) {
 	if (rf_available(NULL) == 1) {
 	  while (rf_available(NULL) == 1) {
-	    unsigned long got_time;                                 // Grab the response, compare, and send to debugging spew
-  uint8_t spi_rxbuf[33];
+	    uint8_t spi_rxbuf[33];
 	    rf_read( spi_rxbuf, 32 );
 	  }
 	  HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_9);
