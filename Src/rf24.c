@@ -1,6 +1,8 @@
 #include "rf24.h"
+#include "stm32f0xx_hal.h"
 #include "stm32f0xx_hal_gpio.h"
 #include "stm32f0xx_hal_spi.h"
+#include <stdint.h>
 
 //static GPIO_InitTypeDef GPIO_InitStruct = {0};
 #define _BV(x) (1<<(x))
@@ -435,4 +437,79 @@ uint8_t rf_read_payload(void* buf, uint8_t data_len)
   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_SET); // NSS1 low
 
   return status;
+}
+
+uint8_t write_payload(uint8_t* buf, uint8_t data_len, const uint8_t writeType)
+{
+    uint8_t status;
+
+    //printf("[Writing %u bytes %u blanks]",data_len,blank_len);
+    //IF_SERIAL_DEBUG(printf("[Writing %u bytes %u blanks]\n", data_len, blank_len); );
+    uint8_t spi_rxbuf[33];
+  uint8_t* spi_txbuf = buf;
+
+  for (int i = 0; i < 33; i++) {
+    spi_rxbuf[i] = 0xFF;
+  }
+  spi_txbuf[0] = writeType;
+
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_RESET); // NSS1 low
+  HAL_SPI_TransmitReceive(&hspi1, spi_txbuf, spi_rxbuf, 33, 1000);
+  status = spi_rxbuf[0];
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_SET); // NSS1 low
+  return status;
+}
+
+
+void startFastWrite(uint8_t* buf, uint8_t len, const bool multicast, bool startTx)
+{
+  write_payload(buf, len, multicast ? W_TX_PAYLOAD_NO_ACK : W_TX_PAYLOAD);
+  if (startTx)
+    {
+      ce(HIGH);
+    }
+}
+
+
+//Similar to the previous write, clears the interrupt flags
+bool rf_write(uint8_t* buf, uint8_t len)
+{
+    //Start Writing
+  startFastWrite(buf, len, 0, true);
+
+  while (!(get_status() & (_BV(TX_DS) | _BV(MAX_RT)))) {
+  }
+
+
+    ce(LOW);
+
+    uint8_t status = write_register(NRF_STATUS, _BV(RX_DR) | _BV(TX_DS) | _BV(MAX_RT));
+
+    //Max retries exceeded
+    if (status & _BV(MAX_RT)) {
+        flush_tx(); //Only going to be 1 packet int the FIFO at a time using this method, so just flush
+        return 0;
+    }
+    //TX OK 1 or 0
+    return 1;
+}
+void rf_stopListening(void)
+{
+    ce(LOW);
+
+    //delayMicroseconds(txDelay);
+    HAL_Delay(10);
+
+    if (read_register(FEATURE) & _BV(EN_ACK_PAY)) {
+      //delayMicroseconds(txDelay); //200
+      HAL_Delay(20);
+        flush_tx();
+    }
+    //flush_rx();
+    write_register(NRF_CONFIG, (read_register(NRF_CONFIG)) & ~_BV(PRIM_RX));
+
+        write_register(EN_RXADDR, read_register(EN_RXADDR) | _BV(child_pipe_enable[0])); // Enable RX on pipe0
+
+    //delayMicroseconds(100);
+
 }

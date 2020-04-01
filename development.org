@@ -77,7 +77,8 @@ This means that something is wrong with my stm32 code.
 I spent ages going through the signals and code and as far as I could
 tell, the stm board is sending and receiving the correct data.
 
-I then start playing around with the spi speeds... And the thing starts to work as expected!!!
+I then start playing around with the spi speeds... And the thing
+starts to work as expected!!!
 
 I am now seeing data going from the arduino board, throught the nrf
 modules, and into the stm board, where it is toggling an led, just as
@@ -92,3 +93,13 @@ left over, which seemed to stop the module from recieving new data.
 
 I'm now going to write up the nrf code as a seperate module.
 
+* [2020-04-01 Wed]  
+
+I have now setup the rf24 code into a seperate module called
+rf24. This wasn't too bad, only taking a couple of hours to get
+working.
+
+The module is now able to receive and send bytes of code back and forward.
+
+I an now going to add more and more functions until it has copied
+almost all of the functionality of the original module.

@@ -24,7 +24,9 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <stdbool.h>
+#include <stdint.h>
 #include "rf24.h"
+#include "stm32f0xx_hal.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -95,10 +97,10 @@ int main(void)
   bool radioNumber = 0;
   uint8_t addresses[][6] = {"1Node", "2Node"};
 
-
   if (rf_begin() == true) {
 
     if (radioNumber == 0) {
+  rf_setPALevel(RF24_PA_LOW);
       rf_openWritingPipe(addresses[0]);
       rf_openReadingPipe(1, addresses[1]);
 
@@ -110,11 +112,23 @@ int main(void)
 	    uint8_t spi_rxbuf[33];
 	    rf_read( spi_rxbuf, 32 );
 	  }
+	  uint8_t spi_tfbuf[33];
+	  // HAL_Delay(500);
+	  rf_stopListening();
+	  // HAL_Delay(500);
+	  if (rf_write(spi_tfbuf, 2) ==  1)
+	    {
+	        HAL_Delay(1);
+	      rf_startListening();
 	  HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_9);
+	    
         }
       }
     }
+    }
+
   }
+  
 
   /* USER CODE END 2 */
 
