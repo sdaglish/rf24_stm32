@@ -37,5 +37,8 @@ uint8_t rf_read_payload(void *buf, uint8_t data_len);
 void rf_read(void *buf, uint8_t len);
 bool rf_write(uint8_t* buf, uint8_t len);
 void rf_stopListening(void);
+void rf_enableAckPayload(void);
+void rf_enableDynamicPayloads(void);
+void rf_writeAckPayload(uint8_t pipe, const uint8_t* buf, uint8_t len);
 
 #endif
