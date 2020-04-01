@@ -11,7 +11,7 @@
 
 static SPI_HandleTypeDef hspi1;
 static uint32_t txDelay;
-static bool p_variant; /* False for RF24L01 and true for RF24L01P */
+static bool p_variant = false; /* False for RF24L01 and true for RF24L01P */
 static bool dynamic_payloads_enabled; /**< Whether dynamic payloads are enabled. */
 static uint8_t addr_width = 5;
 static uint8_t payload_size = 32;
@@ -151,7 +151,7 @@ uint8_t spiTrans(uint8_t cmd)
 
   HAL_GPIO_WritePin( GPIOA, GPIO_PIN_12, GPIO_PIN_RESET ); // NSS1 low
   HAL_SPI_TransmitReceive(&hspi1, spi_txbuf, spi_rxbuf, 1, 1000);
-  status = spi_txbuf[0];
+  status = spi_rxbuf[0];
 
   HAL_GPIO_WritePin( GPIOA, GPIO_PIN_12, GPIO_PIN_SET ); // NSS1 low
   return status;
@@ -230,6 +230,7 @@ pipe0_reading_address[0]=0;
 
   // Reset NRF_CONFIG and enable 16-bit CRC.
     write_register(NRF_CONFIG, 0x0C);
+    //   (* 5 1.5)
 
 
     // Set 1500uS (minimum for 32B payload in ESB@250KBPS) timeouts, to make testing a little easier
@@ -385,7 +386,7 @@ void rf_startListening(void)
     // Go!
     //delayMicroseconds(100);
 
-    HAL_Delay(100);
+    HAL_Delay(1);
 }
 
 uint8_t get_status(void) { return spiTrans(RF24_NOP); }
@@ -478,7 +479,8 @@ bool rf_write(uint8_t* buf, uint8_t len)
 {
     //Start Writing
   startFastWrite(buf, len, 0, true);
-
+  // HAL_Delay(5);
+ 
   while (!(get_status() & (_BV(TX_DS) | _BV(MAX_RT)))) {
   }
 
@@ -500,19 +502,20 @@ void rf_stopListening(void)
     ce(LOW);
 
     //delayMicroseconds(txDelay);
-    HAL_Delay(10);
+    HAL_Delay(1);
 
     if (read_register(FEATURE) & _BV(EN_ACK_PAY)) {
       //delayMicroseconds(txDelay); //200
-      HAL_Delay(20);
+      HAL_Delay(1);
         flush_tx();
     }
-    //flush_rx();
+    // flush_rx();
     write_register(NRF_CONFIG, (read_register(NRF_CONFIG)) & ~_BV(PRIM_RX));
 
         write_register(EN_RXADDR, read_register(EN_RXADDR) | _BV(child_pipe_enable[0])); // Enable RX on pipe0
 
     //delayMicroseconds(100);
+	//	HAL_Delay(100);
 
 }
 
@@ -562,7 +565,8 @@ void rf_writeAckPayload(uint8_t pipe, const uint8_t* buf, uint8_t len)
 
     HAL_SPI_Transmit(&hspi1, tx, 1, 1000);
     while (data_len--) {
-      HAL_SPI_Transmit(&hspi1, (uint8_t*)current++, 1, 1000);
+      HAL_SPI_Transmit(&hspi1, (uint8_t*)current, 1, 1000);
+      current++;
     }
   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_SET); // NSS1 low
 }

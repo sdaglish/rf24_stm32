@@ -131,3 +131,22 @@ I will need to fix that.
 In terms of responsiveness, I'm getting a round-trip of about 1300us,
 which is pretty good. However, the two devices are about 50cm apart,
 so that's not much of a test.
+
+Next thing I need to do is setup the stm32 as a sending device. This
+will be more interesting and potentially a bit more difficult. What
+I'm going to do is setup a counter and have than sent to the arduino. 
+
+** Update 3
+
+Interesting development. It seems that the tx code seems to think that
+an ack has happened even when there is no module connected to the rx
+device.
+ 
+** Update 4
+
+Well that's very odd. It looks like the ack is being received every
+other transmission.
+
+OK, I'm an idiot. I had simply messed up the return status code so
+that it was returning the value from the tx rather than from the
+rx. Fixing this fixed my problem.

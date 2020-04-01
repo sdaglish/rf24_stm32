@@ -27,6 +27,7 @@
 #include <stdint.h>
 #include "rf24.h"
 #include "stm32f0xx_hal.h"
+#include "stm32f0xx_hal_spi.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -123,22 +124,41 @@ int main(void)
     }
     rf_startListening(); // Start listening
 
-    rf_writeAckPayload(
+     rf_writeAckPayload(
 	1, &counter,
 	1); // Pre-load an ack-paylod into the FIFO buffer for pipe 1
-  
+    
      HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_RESET);
 
-	     uint8_t spi_rxbuf[33];
+	     uint8_t spi_rxbuf[39];
+	     uint8_t spi_tfbuf[39];
+
+	     spi_tfbuf[0] = 0;
+	     spi_tfbuf[1] = 0;
+	     rf_stopListening();
+	     
      while(1)
        {
-	 uint8_t pipeNo, getByte;
-	 while (rf_available(&pipeNo))
+       /* uint8_t pipeNo, getByte;
+       while (rf_available(&pipeNo))
+         {
+          rf_read( spi_rxbuf, 32 );
+          if(spi_rxbuf[1] == 1)
+        HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_9);
+         }
+       */
+	     rf_stopListening();
+	 if(rf_write(spi_tfbuf, 2) == 1)
 	   {
-            rf_read( spi_rxbuf, 32 );
-	    if(spi_rxbuf[1] == 1)
-          HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_9);
+	     
+        HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_9);
+	spi_tfbuf[0]++;
+	spi_tfbuf[1]++;
+	
+
+	 
 	   }
+	 HAL_Delay(1000);
        }
     /*    if (radioNumber == 0) {
       HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_SET);
@@ -200,7 +220,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
-  RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL12;
+  RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL16;
   RCC_OscInitStruct.PLL.PREDIV = RCC_PREDIV_DIV1;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
