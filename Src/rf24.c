@@ -417,6 +417,7 @@ void rf_read(void *buf, uint8_t len)
     write_register(NRF_STATUS, _BV(RX_DR) | _BV(MAX_RT) | _BV(TX_DS));
 }
 
+// TODO Improve this so that a buffer of 32 bytes isn't required.
 uint8_t rf_read_payload(void* buf, uint8_t data_len)
 {
   uint8_t status;
@@ -439,6 +440,7 @@ uint8_t rf_read_payload(void* buf, uint8_t data_len)
   return status;
 }
 
+// TODO Improve this so that a buffer of 32 bytes isn't required.
 uint8_t write_payload(uint8_t* buf, uint8_t data_len, const uint8_t writeType)
 {
     uint8_t status;
