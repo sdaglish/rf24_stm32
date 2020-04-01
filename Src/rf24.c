@@ -82,6 +82,7 @@ void setRetries(uint8_t delay, uint8_t count)
     write_register(SETUP_RETR, (delay & 0xf) << ARD | (count & 0xf) << ARC);
 }
 
+// TODO Do something with the function below as it's using stuff from the arduino that I'm not
 bool setDataRate(rf24_datarate_e speed)
 {
     bool result = false;
