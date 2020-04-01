@@ -60,8 +60,8 @@ uint8_t write_register_buf(uint8_t reg, const uint8_t* buf, uint8_t buf_size)
 
 uint8_t read_register(uint8_t reg) {
   uint8_t result;
-  uint8_t spi_txbuf[3];
-  uint8_t spi_rxbuf[3];
+  uint8_t spi_txbuf[2];
+  uint8_t spi_rxbuf[2];
 
   spi_txbuf[0] = R_REGISTER | (REGISTER_MASK & reg);
   spi_txbuf[1] = 0xFF;
