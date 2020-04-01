@@ -515,3 +515,54 @@ void rf_stopListening(void)
     //delayMicroseconds(100);
 
 }
+
+void rf_enableAckPayload(void)
+{
+    //
+    // enable ack payload and dynamic payload features
+    //
+
+    //toggle_features();
+    write_register(FEATURE, read_register(FEATURE) | _BV(EN_ACK_PAY) | _BV(EN_DPL));
+
+    //
+    // Enable dynamic payload on pipes 0 & 1
+    //
+    write_register(DYNPD, read_register(DYNPD) | _BV(DPL_P1) | _BV(DPL_P0));
+    dynamic_payloads_enabled = true;
+}
+
+void rf_enableDynamicPayloads(void)
+{
+    // Enable dynamic payload throughout the system
+
+    //toggle_features();
+    write_register(FEATURE, read_register(FEATURE) | _BV(EN_DPL));
+
+    //  IF_SERIAL_DEBUG(printf("FEATURE=%i\r\n", read_register(FEATURE)));
+
+    // Enable dynamic payload on all pipes
+    //
+    // Not sure the use case of only having dynamic payload on certain
+    // pipes, so the library does not support it.
+    write_register(DYNPD, read_register(DYNPD) | _BV(DPL_P5) | _BV(DPL_P4) | _BV(DPL_P3) | _BV(DPL_P2) | _BV(DPL_P1) | _BV(DPL_P0));
+
+    dynamic_payloads_enabled = true;
+}
+
+void rf_writeAckPayload(uint8_t pipe, const uint8_t* buf, uint8_t len)
+{
+    const uint8_t* current = buf;
+
+    uint8_t data_len = rf24_min(len, 32);
+    uint8_t tx[1] = {(W_ACK_PAYLOAD | (pipe & 0x07))};
+
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_RESET); // NSS1 low
+  
+
+    HAL_SPI_Transmit(&hspi1, tx, 1, 1000);
+    while (data_len--) {
+      HAL_SPI_Transmit(&hspi1, (uint8_t*)current++, 1, 1000);
+    }
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_SET); // NSS1 low
+}
