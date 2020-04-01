@@ -18,14 +18,14 @@
             "-ffunction-sections",
             "-g",
             "-gdwarf-2",
-            "-MFbuild/stm32f0xx_hal_pwr_ex.d",
-            "-Wa,-a,-ad,-alms=build/stm32f0xx_hal_pwr_ex.lst",
+            "-MFbuild/stm32f0xx_hal_tim_ex.d",
+            "-Wa,-a,-ad,-alms=build/stm32f0xx_hal_tim_ex.lst",
             "-o",
-            "build/stm32f0xx_hal_pwr_ex.o",
-            "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_pwr_ex.c"
+            "build/stm32f0xx_hal_tim_ex.o",
+            "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_tim_ex.c"
         ],
-        "directory": "/mnt/d/projects/rf24",
-        "file": "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_pwr_ex.c"
+        "directory": "/home/steven/Documents/projects/home-automation/rf24",
+        "file": "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_tim_ex.c"
     },
     {
         "arguments": [
@@ -46,14 +46,70 @@
             "-ffunction-sections",
             "-g",
             "-gdwarf-2",
-            "-MFbuild/stm32f0xx_hal_rcc.d",
-            "-Wa,-a,-ad,-alms=build/stm32f0xx_hal_rcc.lst",
+            "-MFbuild/stm32f0xx_hal_spi.d",
+            "-Wa,-a,-ad,-alms=build/stm32f0xx_hal_spi.lst",
             "-o",
-            "build/stm32f0xx_hal_rcc.o",
-            "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_rcc.c"
+            "build/stm32f0xx_hal_spi.o",
+            "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_spi.c"
         ],
-        "directory": "/mnt/d/projects/rf24",
-        "file": "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_rcc.c"
+        "directory": "/home/steven/Documents/projects/home-automation/rf24",
+        "file": "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_spi.c"
+    },
+    {
+        "arguments": [
+            "arm-none-eabi-gcc",
+            "-c",
+            "-mcpu=cortex-m0",
+            "-mthumb",
+            "-DUSE_HAL_DRIVER",
+            "-DSTM32F030x8",
+            "-IInc",
+            "-IDrivers/STM32F0xx_HAL_Driver/Inc",
+            "-IDrivers/STM32F0xx_HAL_Driver/Inc/Legacy",
+            "-IDrivers/CMSIS/Device/ST/STM32F0xx/Include",
+            "-IDrivers/CMSIS/Include",
+            "-Og",
+            "-Wall",
+            "-fdata-sections",
+            "-ffunction-sections",
+            "-g",
+            "-gdwarf-2",
+            "-MFbuild/stm32f0xx_hal_msp.d",
+            "-Wa,-a,-ad,-alms=build/stm32f0xx_hal_msp.lst",
+            "-o",
+            "build/stm32f0xx_hal_msp.o",
+            "Src/stm32f0xx_hal_msp.c"
+        ],
+        "directory": "/home/steven/Documents/projects/home-automation/rf24",
+        "file": "Src/stm32f0xx_hal_msp.c"
+    },
+    {
+        "arguments": [
+            "arm-none-eabi-gcc",
+            "-c",
+            "-mcpu=cortex-m0",
+            "-mthumb",
+            "-DUSE_HAL_DRIVER",
+            "-DSTM32F030x8",
+            "-IInc",
+            "-IDrivers/STM32F0xx_HAL_Driver/Inc",
+            "-IDrivers/STM32F0xx_HAL_Driver/Inc/Legacy",
+            "-IDrivers/CMSIS/Device/ST/STM32F0xx/Include",
+            "-IDrivers/CMSIS/Include",
+            "-Og",
+            "-Wall",
+            "-fdata-sections",
+            "-ffunction-sections",
+            "-g",
+            "-gdwarf-2",
+            "-MFbuild/rf24.d",
+            "-Wa,-a,-ad,-alms=build/rf24.lst",
+            "-o",
+            "build/rf24.o",
+            "Src/rf24.c"
+        ],
+        "directory": "/home/steven/Documents/projects/home-automation/rf24",
+        "file": "Src/rf24.c"
     },
     {
         "arguments": [
@@ -80,7 +136,7 @@
             "build/stm32f0xx_hal.o",
             "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal.c"
         ],
-        "directory": "/mnt/d/projects/rf24",
+        "directory": "/home/steven/Documents/projects/home-automation/rf24",
         "file": "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal.c"
     },
     {
@@ -102,14 +158,14 @@
             "-ffunction-sections",
             "-g",
             "-gdwarf-2",
-            "-MFbuild/stm32f0xx_hal_tim_ex.d",
-            "-Wa,-a,-ad,-alms=build/stm32f0xx_hal_tim_ex.lst",
+            "-MFbuild/stm32f0xx_hal_flash.d",
+            "-Wa,-a,-ad,-alms=build/stm32f0xx_hal_flash.lst",
             "-o",
-            "build/stm32f0xx_hal_tim_ex.o",
-            "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_tim_ex.c"
+            "build/stm32f0xx_hal_flash.o",
+            "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_flash.c"
         ],
-        "directory": "/mnt/d/projects/rf24",
-        "file": "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_tim_ex.c"
+        "directory": "/home/steven/Documents/projects/home-automation/rf24",
+        "file": "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_flash.c"
     },
     {
         "arguments": [
@@ -130,14 +186,14 @@
             "-ffunction-sections",
             "-g",
             "-gdwarf-2",
-            "-MFbuild/stm32f0xx_hal_i2c.d",
-            "-Wa,-a,-ad,-alms=build/stm32f0xx_hal_i2c.lst",
+            "-MFbuild/stm32f0xx_hal_flash_ex.d",
+            "-Wa,-a,-ad,-alms=build/stm32f0xx_hal_flash_ex.lst",
             "-o",
-            "build/stm32f0xx_hal_i2c.o",
-            "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_i2c.c"
+            "build/stm32f0xx_hal_flash_ex.o",
+            "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_flash_ex.c"
         ],
-        "directory": "/mnt/d/projects/rf24",
-        "file": "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_i2c.c"
+        "directory": "/home/steven/Documents/projects/home-automation/rf24",
+        "file": "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_flash_ex.c"
     },
     {
         "arguments": [
@@ -165,7 +221,7 @@
             "build/startup_stm32f030x8.o",
             "startup_stm32f030x8.s"
         ],
-        "directory": "/mnt/d/projects/rf24",
+        "directory": "/home/steven/Documents/projects/home-automation/rf24",
         "file": "startup_stm32f030x8.s"
     },
     {
@@ -187,14 +243,14 @@
             "-ffunction-sections",
             "-g",
             "-gdwarf-2",
-            "-MFbuild/main.d",
-            "-Wa,-a,-ad,-alms=build/main.lst",
+            "-MFbuild/stm32f0xx_hal_cortex.d",
+            "-Wa,-a,-ad,-alms=build/stm32f0xx_hal_cortex.lst",
             "-o",
-            "build/main.o",
-            "Src/main.c"
+            "build/stm32f0xx_hal_cortex.o",
+            "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_cortex.c"
         ],
-        "directory": "/mnt/d/projects/rf24",
-        "file": "Src/main.c"
+        "directory": "/home/steven/Documents/projects/home-automation/rf24",
+        "file": "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_cortex.c"
     },
     {
         "arguments": [
@@ -215,14 +271,126 @@
             "-ffunction-sections",
             "-g",
             "-gdwarf-2",
-            "-MFbuild/stm32f0xx_hal_msp.d",
-            "-Wa,-a,-ad,-alms=build/stm32f0xx_hal_msp.lst",
+            "-MFbuild/stm32f0xx_hal_dma.d",
+            "-Wa,-a,-ad,-alms=build/stm32f0xx_hal_dma.lst",
             "-o",
-            "build/stm32f0xx_hal_msp.o",
-            "Src/stm32f0xx_hal_msp.c"
+            "build/stm32f0xx_hal_dma.o",
+            "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_dma.c"
         ],
-        "directory": "/mnt/d/projects/rf24",
-        "file": "Src/stm32f0xx_hal_msp.c"
+        "directory": "/home/steven/Documents/projects/home-automation/rf24",
+        "file": "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_dma.c"
+    },
+    {
+        "arguments": [
+            "arm-none-eabi-gcc",
+            "-c",
+            "-mcpu=cortex-m0",
+            "-mthumb",
+            "-DUSE_HAL_DRIVER",
+            "-DSTM32F030x8",
+            "-IInc",
+            "-IDrivers/STM32F0xx_HAL_Driver/Inc",
+            "-IDrivers/STM32F0xx_HAL_Driver/Inc/Legacy",
+            "-IDrivers/CMSIS/Device/ST/STM32F0xx/Include",
+            "-IDrivers/CMSIS/Include",
+            "-Og",
+            "-Wall",
+            "-fdata-sections",
+            "-ffunction-sections",
+            "-g",
+            "-gdwarf-2",
+            "-MFbuild/stm32f0xx_hal_pwr_ex.d",
+            "-Wa,-a,-ad,-alms=build/stm32f0xx_hal_pwr_ex.lst",
+            "-o",
+            "build/stm32f0xx_hal_pwr_ex.o",
+            "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_pwr_ex.c"
+        ],
+        "directory": "/home/steven/Documents/projects/home-automation/rf24",
+        "file": "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_pwr_ex.c"
+    },
+    {
+        "arguments": [
+            "arm-none-eabi-gcc",
+            "-c",
+            "-mcpu=cortex-m0",
+            "-mthumb",
+            "-DUSE_HAL_DRIVER",
+            "-DSTM32F030x8",
+            "-IInc",
+            "-IDrivers/STM32F0xx_HAL_Driver/Inc",
+            "-IDrivers/STM32F0xx_HAL_Driver/Inc/Legacy",
+            "-IDrivers/CMSIS/Device/ST/STM32F0xx/Include",
+            "-IDrivers/CMSIS/Include",
+            "-Og",
+            "-Wall",
+            "-fdata-sections",
+            "-ffunction-sections",
+            "-g",
+            "-gdwarf-2",
+            "-MFbuild/stm32f0xx_hal_rcc.d",
+            "-Wa,-a,-ad,-alms=build/stm32f0xx_hal_rcc.lst",
+            "-o",
+            "build/stm32f0xx_hal_rcc.o",
+            "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_rcc.c"
+        ],
+        "directory": "/home/steven/Documents/projects/home-automation/rf24",
+        "file": "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_rcc.c"
+    },
+    {
+        "arguments": [
+            "arm-none-eabi-gcc",
+            "-c",
+            "-mcpu=cortex-m0",
+            "-mthumb",
+            "-DUSE_HAL_DRIVER",
+            "-DSTM32F030x8",
+            "-IInc",
+            "-IDrivers/STM32F0xx_HAL_Driver/Inc",
+            "-IDrivers/STM32F0xx_HAL_Driver/Inc/Legacy",
+            "-IDrivers/CMSIS/Device/ST/STM32F0xx/Include",
+            "-IDrivers/CMSIS/Include",
+            "-Og",
+            "-Wall",
+            "-fdata-sections",
+            "-ffunction-sections",
+            "-g",
+            "-gdwarf-2",
+            "-MFbuild/stm32f0xx_hal_i2c.d",
+            "-Wa,-a,-ad,-alms=build/stm32f0xx_hal_i2c.lst",
+            "-o",
+            "build/stm32f0xx_hal_i2c.o",
+            "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_i2c.c"
+        ],
+        "directory": "/home/steven/Documents/projects/home-automation/rf24",
+        "file": "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_i2c.c"
+    },
+    {
+        "arguments": [
+            "arm-none-eabi-gcc",
+            "-c",
+            "-mcpu=cortex-m0",
+            "-mthumb",
+            "-DUSE_HAL_DRIVER",
+            "-DSTM32F030x8",
+            "-IInc",
+            "-IDrivers/STM32F0xx_HAL_Driver/Inc",
+            "-IDrivers/STM32F0xx_HAL_Driver/Inc/Legacy",
+            "-IDrivers/CMSIS/Device/ST/STM32F0xx/Include",
+            "-IDrivers/CMSIS/Include",
+            "-Og",
+            "-Wall",
+            "-fdata-sections",
+            "-ffunction-sections",
+            "-g",
+            "-gdwarf-2",
+            "-MFbuild/stm32f0xx_hal_exti.d",
+            "-Wa,-a,-ad,-alms=build/stm32f0xx_hal_exti.lst",
+            "-o",
+            "build/stm32f0xx_hal_exti.o",
+            "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_exti.c"
+        ],
+        "directory": "/home/steven/Documents/projects/home-automation/rf24",
+        "file": "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_exti.c"
     },
     {
         "arguments": [
@@ -249,64 +417,8 @@
             "build/stm32f0xx_hal_rcc_ex.o",
             "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_rcc_ex.c"
         ],
-        "directory": "/mnt/d/projects/rf24",
+        "directory": "/home/steven/Documents/projects/home-automation/rf24",
         "file": "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_rcc_ex.c"
-    },
-    {
-        "arguments": [
-            "arm-none-eabi-gcc",
-            "-c",
-            "-mcpu=cortex-m0",
-            "-mthumb",
-            "-DUSE_HAL_DRIVER",
-            "-DSTM32F030x8",
-            "-IInc",
-            "-IDrivers/STM32F0xx_HAL_Driver/Inc",
-            "-IDrivers/STM32F0xx_HAL_Driver/Inc/Legacy",
-            "-IDrivers/CMSIS/Device/ST/STM32F0xx/Include",
-            "-IDrivers/CMSIS/Include",
-            "-Og",
-            "-Wall",
-            "-fdata-sections",
-            "-ffunction-sections",
-            "-g",
-            "-gdwarf-2",
-            "-MFbuild/stm32f0xx_hal_flash_ex.d",
-            "-Wa,-a,-ad,-alms=build/stm32f0xx_hal_flash_ex.lst",
-            "-o",
-            "build/stm32f0xx_hal_flash_ex.o",
-            "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_flash_ex.c"
-        ],
-        "directory": "/mnt/d/projects/rf24",
-        "file": "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_flash_ex.c"
-    },
-    {
-        "arguments": [
-            "arm-none-eabi-gcc",
-            "-c",
-            "-mcpu=cortex-m0",
-            "-mthumb",
-            "-DUSE_HAL_DRIVER",
-            "-DSTM32F030x8",
-            "-IInc",
-            "-IDrivers/STM32F0xx_HAL_Driver/Inc",
-            "-IDrivers/STM32F0xx_HAL_Driver/Inc/Legacy",
-            "-IDrivers/CMSIS/Device/ST/STM32F0xx/Include",
-            "-IDrivers/CMSIS/Include",
-            "-Og",
-            "-Wall",
-            "-fdata-sections",
-            "-ffunction-sections",
-            "-g",
-            "-gdwarf-2",
-            "-MFbuild/stm32f0xx_hal_flash.d",
-            "-Wa,-a,-ad,-alms=build/stm32f0xx_hal_flash.lst",
-            "-o",
-            "build/stm32f0xx_hal_flash.o",
-            "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_flash.c"
-        ],
-        "directory": "/mnt/d/projects/rf24",
-        "file": "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_flash.c"
     },
     {
         "arguments": [
@@ -333,7 +445,7 @@
             "build/system_stm32f0xx.o",
             "Src/system_stm32f0xx.c"
         ],
-        "directory": "/mnt/d/projects/rf24",
+        "directory": "/home/steven/Documents/projects/home-automation/rf24",
         "file": "Src/system_stm32f0xx.c"
     },
     {
@@ -355,14 +467,70 @@
             "-ffunction-sections",
             "-g",
             "-gdwarf-2",
-            "-MFbuild/stm32f0xx_hal_spi.d",
-            "-Wa,-a,-ad,-alms=build/stm32f0xx_hal_spi.lst",
+            "-MFbuild/main.d",
+            "-Wa,-a,-ad,-alms=build/main.lst",
             "-o",
-            "build/stm32f0xx_hal_spi.o",
-            "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_spi.c"
+            "build/main.o",
+            "Src/main.c"
         ],
-        "directory": "/mnt/d/projects/rf24",
-        "file": "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_spi.c"
+        "directory": "/home/steven/Documents/projects/home-automation/rf24",
+        "file": "Src/main.c"
+    },
+    {
+        "arguments": [
+            "arm-none-eabi-gcc",
+            "-c",
+            "-mcpu=cortex-m0",
+            "-mthumb",
+            "-DUSE_HAL_DRIVER",
+            "-DSTM32F030x8",
+            "-IInc",
+            "-IDrivers/STM32F0xx_HAL_Driver/Inc",
+            "-IDrivers/STM32F0xx_HAL_Driver/Inc/Legacy",
+            "-IDrivers/CMSIS/Device/ST/STM32F0xx/Include",
+            "-IDrivers/CMSIS/Include",
+            "-Og",
+            "-Wall",
+            "-fdata-sections",
+            "-ffunction-sections",
+            "-g",
+            "-gdwarf-2",
+            "-MFbuild/stm32f0xx_hal_spi_ex.d",
+            "-Wa,-a,-ad,-alms=build/stm32f0xx_hal_spi_ex.lst",
+            "-o",
+            "build/stm32f0xx_hal_spi_ex.o",
+            "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_spi_ex.c"
+        ],
+        "directory": "/home/steven/Documents/projects/home-automation/rf24",
+        "file": "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_spi_ex.c"
+    },
+    {
+        "arguments": [
+            "arm-none-eabi-gcc",
+            "-c",
+            "-mcpu=cortex-m0",
+            "-mthumb",
+            "-DUSE_HAL_DRIVER",
+            "-DSTM32F030x8",
+            "-IInc",
+            "-IDrivers/STM32F0xx_HAL_Driver/Inc",
+            "-IDrivers/STM32F0xx_HAL_Driver/Inc/Legacy",
+            "-IDrivers/CMSIS/Device/ST/STM32F0xx/Include",
+            "-IDrivers/CMSIS/Include",
+            "-Og",
+            "-Wall",
+            "-fdata-sections",
+            "-ffunction-sections",
+            "-g",
+            "-gdwarf-2",
+            "-MFbuild/stm32f0xx_hal_gpio.d",
+            "-Wa,-a,-ad,-alms=build/stm32f0xx_hal_gpio.lst",
+            "-o",
+            "build/stm32f0xx_hal_gpio.o",
+            "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_gpio.c"
+        ],
+        "directory": "/home/steven/Documents/projects/home-automation/rf24",
+        "file": "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_gpio.c"
     },
     {
         "arguments": [
@@ -389,7 +557,7 @@
             "build/stm32f0xx_hal_pwr.o",
             "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_pwr.c"
         ],
-        "directory": "/mnt/d/projects/rf24",
+        "directory": "/home/steven/Documents/projects/home-automation/rf24",
         "file": "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_pwr.c"
     },
     {
@@ -417,120 +585,8 @@
             "build/stm32f0xx_hal_i2c_ex.o",
             "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_i2c_ex.c"
         ],
-        "directory": "/mnt/d/projects/rf24",
+        "directory": "/home/steven/Documents/projects/home-automation/rf24",
         "file": "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_i2c_ex.c"
-    },
-    {
-        "arguments": [
-            "arm-none-eabi-gcc",
-            "-c",
-            "-mcpu=cortex-m0",
-            "-mthumb",
-            "-DUSE_HAL_DRIVER",
-            "-DSTM32F030x8",
-            "-IInc",
-            "-IDrivers/STM32F0xx_HAL_Driver/Inc",
-            "-IDrivers/STM32F0xx_HAL_Driver/Inc/Legacy",
-            "-IDrivers/CMSIS/Device/ST/STM32F0xx/Include",
-            "-IDrivers/CMSIS/Include",
-            "-Og",
-            "-Wall",
-            "-fdata-sections",
-            "-ffunction-sections",
-            "-g",
-            "-gdwarf-2",
-            "-MFbuild/stm32f0xx_hal_tim.d",
-            "-Wa,-a,-ad,-alms=build/stm32f0xx_hal_tim.lst",
-            "-o",
-            "build/stm32f0xx_hal_tim.o",
-            "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_tim.c"
-        ],
-        "directory": "/mnt/d/projects/rf24",
-        "file": "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_tim.c"
-    },
-    {
-        "arguments": [
-            "arm-none-eabi-gcc",
-            "-c",
-            "-mcpu=cortex-m0",
-            "-mthumb",
-            "-DUSE_HAL_DRIVER",
-            "-DSTM32F030x8",
-            "-IInc",
-            "-IDrivers/STM32F0xx_HAL_Driver/Inc",
-            "-IDrivers/STM32F0xx_HAL_Driver/Inc/Legacy",
-            "-IDrivers/CMSIS/Device/ST/STM32F0xx/Include",
-            "-IDrivers/CMSIS/Include",
-            "-Og",
-            "-Wall",
-            "-fdata-sections",
-            "-ffunction-sections",
-            "-g",
-            "-gdwarf-2",
-            "-MFbuild/stm32f0xx_hal_exti.d",
-            "-Wa,-a,-ad,-alms=build/stm32f0xx_hal_exti.lst",
-            "-o",
-            "build/stm32f0xx_hal_exti.o",
-            "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_exti.c"
-        ],
-        "directory": "/mnt/d/projects/rf24",
-        "file": "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_exti.c"
-    },
-    {
-        "arguments": [
-            "arm-none-eabi-gcc",
-            "-c",
-            "-mcpu=cortex-m0",
-            "-mthumb",
-            "-DUSE_HAL_DRIVER",
-            "-DSTM32F030x8",
-            "-IInc",
-            "-IDrivers/STM32F0xx_HAL_Driver/Inc",
-            "-IDrivers/STM32F0xx_HAL_Driver/Inc/Legacy",
-            "-IDrivers/CMSIS/Device/ST/STM32F0xx/Include",
-            "-IDrivers/CMSIS/Include",
-            "-Og",
-            "-Wall",
-            "-fdata-sections",
-            "-ffunction-sections",
-            "-g",
-            "-gdwarf-2",
-            "-MFbuild/stm32f0xx_hal_cortex.d",
-            "-Wa,-a,-ad,-alms=build/stm32f0xx_hal_cortex.lst",
-            "-o",
-            "build/stm32f0xx_hal_cortex.o",
-            "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_cortex.c"
-        ],
-        "directory": "/mnt/d/projects/rf24",
-        "file": "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_cortex.c"
-    },
-    {
-        "arguments": [
-            "arm-none-eabi-gcc",
-            "-c",
-            "-mcpu=cortex-m0",
-            "-mthumb",
-            "-DUSE_HAL_DRIVER",
-            "-DSTM32F030x8",
-            "-IInc",
-            "-IDrivers/STM32F0xx_HAL_Driver/Inc",
-            "-IDrivers/STM32F0xx_HAL_Driver/Inc/Legacy",
-            "-IDrivers/CMSIS/Device/ST/STM32F0xx/Include",
-            "-IDrivers/CMSIS/Include",
-            "-Og",
-            "-Wall",
-            "-fdata-sections",
-            "-ffunction-sections",
-            "-g",
-            "-gdwarf-2",
-            "-MFbuild/stm32f0xx_hal_gpio.d",
-            "-Wa,-a,-ad,-alms=build/stm32f0xx_hal_gpio.lst",
-            "-o",
-            "build/stm32f0xx_hal_gpio.o",
-            "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_gpio.c"
-        ],
-        "directory": "/mnt/d/projects/rf24",
-        "file": "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_gpio.c"
     },
     {
         "arguments": [
@@ -557,7 +613,7 @@
             "build/stm32f0xx_it.o",
             "Src/stm32f0xx_it.c"
         ],
-        "directory": "/mnt/d/projects/rf24",
+        "directory": "/home/steven/Documents/projects/home-automation/rf24",
         "file": "Src/stm32f0xx_it.c"
     },
     {
@@ -579,41 +635,13 @@
             "-ffunction-sections",
             "-g",
             "-gdwarf-2",
-            "-MFbuild/stm32f0xx_hal_spi_ex.d",
-            "-Wa,-a,-ad,-alms=build/stm32f0xx_hal_spi_ex.lst",
+            "-MFbuild/stm32f0xx_hal_tim.d",
+            "-Wa,-a,-ad,-alms=build/stm32f0xx_hal_tim.lst",
             "-o",
-            "build/stm32f0xx_hal_spi_ex.o",
-            "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_spi_ex.c"
+            "build/stm32f0xx_hal_tim.o",
+            "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_tim.c"
         ],
-        "directory": "/mnt/d/projects/rf24",
-        "file": "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_spi_ex.c"
-    },
-    {
-        "arguments": [
-            "arm-none-eabi-gcc",
-            "-c",
-            "-mcpu=cortex-m0",
-            "-mthumb",
-            "-DUSE_HAL_DRIVER",
-            "-DSTM32F030x8",
-            "-IInc",
-            "-IDrivers/STM32F0xx_HAL_Driver/Inc",
-            "-IDrivers/STM32F0xx_HAL_Driver/Inc/Legacy",
-            "-IDrivers/CMSIS/Device/ST/STM32F0xx/Include",
-            "-IDrivers/CMSIS/Include",
-            "-Og",
-            "-Wall",
-            "-fdata-sections",
-            "-ffunction-sections",
-            "-g",
-            "-gdwarf-2",
-            "-MFbuild/stm32f0xx_hal_dma.d",
-            "-Wa,-a,-ad,-alms=build/stm32f0xx_hal_dma.lst",
-            "-o",
-            "build/stm32f0xx_hal_dma.o",
-            "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_dma.c"
-        ],
-        "directory": "/mnt/d/projects/rf24",
-        "file": "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_dma.c"
+        "directory": "/home/steven/Documents/projects/home-automation/rf24",
+        "file": "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_tim.c"
     }
 ]
