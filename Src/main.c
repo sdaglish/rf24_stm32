@@ -128,6 +128,18 @@ int main(void)
 	1); // Pre-load an ack-paylod into the FIFO buffer for pipe 1
   
      HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_RESET);
+
+	     uint8_t spi_rxbuf[33];
+     while(1)
+       {
+	 uint8_t pipeNo, getByte;
+	 while (rf_available(&pipeNo))
+	   {
+            rf_read( spi_rxbuf, 32 );
+	    if(spi_rxbuf[1] == 1)
+          HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_9);
+	   }
+       }
     /*    if (radioNumber == 0) {
       HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_SET);
   rf_setPALevel(RF24_PA_LOW);

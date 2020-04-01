@@ -115,3 +115,19 @@ array isn't the correct size, then a buffer overflow can happen.
 The same is true for rf_read.
 
 I have made a note to improve the functionality of both of these.
+
+** Update 2
+
+I have been working on getting the ack to work on the receiver.  So
+far it seems to be working and I'm getting the receiver to accept the
+tx message, do an automatic ACK, and then do something based on the
+message.
+
+However, one thing that I have noticed is that when reading the sent
+message, the module is actually storing the message indexed at array
+address 1.  Obviously, the message should be stored from address 0, so
+I will need to fix that.
+
+In terms of responsiveness, I'm getting a round-trip of about 1300us,
+which is pretty good. However, the two devices are about 50cm apart,
+so that's not much of a test.
