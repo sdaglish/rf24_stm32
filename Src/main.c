@@ -94,21 +94,12 @@ int main(void)
   MX_GPIO_Init();
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
-  // bool role = 0;
   bool radioNumber = 0;
 
   uint8_t addresses[][6] = {"1Node", "2Node"};
-  typedef enum {
-    role_ping_out = 1,
-    role_pong_back
-  } role_e; // The various roles supported by this sketch
-  const char *role_friendly_name[] = {
-      "invalid", "Ping out",
-      "Pong back"};             // The debug-friendly names of those roles
-  role_e role = role_ping_out; // The role of the current running sketch
 
   if (rf_begin() == true) {
-      HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_SET);
     uint8_t counter = 1;
     rf_enableAckPayload();
     rf_enableDynamicPayloads();
@@ -124,71 +115,33 @@ int main(void)
     }
     rf_startListening(); // Start listening
 
-     rf_writeAckPayload(
+    rf_writeAckPayload(
 	1, &counter,
 	1); // Pre-load an ack-paylod into the FIFO buffer for pipe 1
-    
-     HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_RESET);
 
-	     uint8_t spi_rxbuf[39];
-	     uint8_t spi_tfbuf[39];
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_RESET);
 
-	     spi_tfbuf[0] = 0;
-	     spi_tfbuf[1] = 0;
-	     rf_stopListening();
+    uint8_t spi_tfbuf[2];
 
-	     while (1) {
-	       /* uint8_t pipeNo, getByte;
-	       while (rf_available(&pipeNo))
-		 {
-		  rf_read( spi_rxbuf, 32 );
-		  if(spi_rxbuf[1] == 1)
-		HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_9);
-		 }
-	       */
-	       rf_powerUp();
+    spi_tfbuf[0] = 0;
+    spi_tfbuf[1] = 0;
+    rf_stopListening();
 
-	       rf_stopListening();
+    while (1) {
+      rf_powerUp();
 
-	       if (rf_write(spi_tfbuf, 2) == 1) {
+      rf_stopListening();
 
-		 HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_9);
-		 spi_tfbuf[0]++;
-                 //	spi_tfbuf[1]++;
-               }
-               rf_powerDown();
-               HAL_Delay(1000);
-             }
-             /*    if (radioNumber == 0) {
-               HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_SET);
-           rf_setPALevel(RF24_PA_LOW);
-               rf_openWritingPipe(addresses[0]);
-               rf_openReadingPipe(1, addresses[1]);
+      if (rf_write(spi_tfbuf, 2) == 1) {
 
-               rf_startListening();
-               HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_SET);
-               while (1) {
-                 if (rf_available(NULL) == 1) {
-                   while (rf_available(NULL) == 1) {
-                     uint8_t spi_rxbuf[33];
-                     rf_read( spi_rxbuf, 32 );
-                   }
-                   uint8_t spi_tfbuf[33];
-                   // HAL_Delay(500);
-                   rf_stopListening();
-                   // HAL_Delay(500);
-                   if (rf_write(spi_tfbuf, 2) ==  1)
-                     {
-                         HAL_Delay(1);
-                       rf_startListening();
-                   HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_9);
-
-                 }
-               }
-             }
-             */
+	HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_9);
+	spi_tfbuf[0]++;
+	//	spi_tfbuf[1]++;
+      }
+      rf_powerDown();
+      HAL_Delay(1000);
+    }
   }
-  
 
   /* USER CODE END 2 */
 
