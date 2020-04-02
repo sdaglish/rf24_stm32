@@ -572,3 +572,26 @@ void rf_writeAckPayload(uint8_t pipe, const uint8_t* buf, uint8_t len)
     }
   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_SET); // NSS1 low
 }
+
+//Power up now. Radio will not power down unless instructed by MCU for config changes etc.
+void rf_powerUp(void)
+{
+    uint8_t cfg = read_register(NRF_CONFIG);
+
+    // if not powered up then power up and wait for the radio to initialize
+    if (!(cfg & _BV(PWR_UP))) {
+        write_register(NRF_CONFIG, cfg | _BV(PWR_UP));
+
+        // For nRF24L01+ to go from power down mode to TX or RX mode it must first pass through stand-by mode.
+        // There must be a delay of Tpd2stby (see Table 16.) after the nRF24L01+ leaves power down mode before
+        // the CEis set high. - Tpd2stby can be up to 5ms per the 1.0 datasheet
+        //delay(5);
+	HAL_Delay(5);
+    }
+}
+
+void rf_powerDown(void)
+{
+    ce(LOW); // Guarantee CE is low on powerDown
+    write_register(NRF_CONFIG, read_register(NRF_CONFIG) & ~_BV(PWR_UP));
+}

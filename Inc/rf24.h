@@ -40,5 +40,8 @@ void rf_stopListening(void);
 void rf_enableAckPayload(void);
 void rf_enableDynamicPayloads(void);
 void rf_writeAckPayload(uint8_t pipe, const uint8_t* buf, uint8_t len);
+void rf_powerUp(void);
+void rf_powerDown(void);
+
 
 #endif
