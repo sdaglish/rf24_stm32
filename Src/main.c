@@ -105,7 +105,7 @@ int main(void)
   const char *role_friendly_name[] = {
       "invalid", "Ping out",
       "Pong back"};             // The debug-friendly names of those roles
-  role_e role = role_pong_back; // The role of the current running sketch
+  role_e role = role_ping_out; // The role of the current running sketch
 
   if (rf_begin() == true) {
       HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_SET);
@@ -136,58 +136,57 @@ int main(void)
 	     spi_tfbuf[0] = 0;
 	     spi_tfbuf[1] = 0;
 	     rf_stopListening();
-	     
-     while(1)
-       {
-       /* uint8_t pipeNo, getByte;
-       while (rf_available(&pipeNo))
-         {
-          rf_read( spi_rxbuf, 32 );
-          if(spi_rxbuf[1] == 1)
-        HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_9);
-         }
-       */
-	     rf_stopListening();
-	 if(rf_write(spi_tfbuf, 2) == 1)
-	   {
-	     
-        HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_9);
-	spi_tfbuf[0]++;
-	//	spi_tfbuf[1]++;
-	
 
-	 
-	   }
-	 HAL_Delay(1000);
-       }
-    /*    if (radioNumber == 0) {
-      HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_SET);
-  rf_setPALevel(RF24_PA_LOW);
-      rf_openWritingPipe(addresses[0]);
-      rf_openReadingPipe(1, addresses[1]);
+	     while (1) {
+	       /* uint8_t pipeNo, getByte;
+	       while (rf_available(&pipeNo))
+		 {
+		  rf_read( spi_rxbuf, 32 );
+		  if(spi_rxbuf[1] == 1)
+		HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_9);
+		 }
+	       */
+	       rf_powerUp();
 
-      rf_startListening();
-      HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_SET);
-      while (1) {
-        if (rf_available(NULL) == 1) {
-          while (rf_available(NULL) == 1) {
-            uint8_t spi_rxbuf[33];
-            rf_read( spi_rxbuf, 32 );
-          }
-          uint8_t spi_tfbuf[33];
-          // HAL_Delay(500);
-          rf_stopListening();
-          // HAL_Delay(500);
-          if (rf_write(spi_tfbuf, 2) ==  1)
-            {
-                HAL_Delay(1);
-              rf_startListening();
-          HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_9);
+	       rf_stopListening();
 
-        }
-      }
-    }
-    */
+	       if (rf_write(spi_tfbuf, 2) == 1) {
+
+		 HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_9);
+		 spi_tfbuf[0]++;
+                 //	spi_tfbuf[1]++;
+               }
+               rf_powerDown();
+               HAL_Delay(1000);
+             }
+             /*    if (radioNumber == 0) {
+               HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_SET);
+           rf_setPALevel(RF24_PA_LOW);
+               rf_openWritingPipe(addresses[0]);
+               rf_openReadingPipe(1, addresses[1]);
+
+               rf_startListening();
+               HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_SET);
+               while (1) {
+                 if (rf_available(NULL) == 1) {
+                   while (rf_available(NULL) == 1) {
+                     uint8_t spi_rxbuf[33];
+                     rf_read( spi_rxbuf, 32 );
+                   }
+                   uint8_t spi_tfbuf[33];
+                   // HAL_Delay(500);
+                   rf_stopListening();
+                   // HAL_Delay(500);
+                   if (rf_write(spi_tfbuf, 2) ==  1)
+                     {
+                         HAL_Delay(1);
+                       rf_startListening();
+                   HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_9);
+
+                 }
+               }
+             }
+             */
   }
   
 
