@@ -60,8 +60,8 @@ uint8_t write_register_buf(uint8_t reg, const uint8_t* buf, uint8_t buf_size)
 
 uint8_t read_register(uint8_t reg) {
   uint8_t result;
-  uint8_t spi_txbuf[3];
-  uint8_t spi_rxbuf[3];
+  uint8_t spi_txbuf[2];
+  uint8_t spi_rxbuf[2];
 
   spi_txbuf[0] = R_REGISTER | (REGISTER_MASK & reg);
   spi_txbuf[1] = 0xFF;
@@ -82,6 +82,7 @@ void setRetries(uint8_t delay, uint8_t count)
     write_register(SETUP_RETR, (delay & 0xf) << ARD | (count & 0xf) << ARC);
 }
 
+// TODO Do something with the function below as it's using stuff from the arduino that I'm not
 bool setDataRate(rf24_datarate_e speed)
 {
     bool result = false;
@@ -418,49 +419,50 @@ void rf_read(void *buf, uint8_t len)
     write_register(NRF_STATUS, _BV(RX_DR) | _BV(MAX_RT) | _BV(TX_DS));
 }
 
+static uint8_t blank_data[32] = {0};
 // TODO Improve this so that a buffer of 32 bytes isn't required.
 uint8_t rf_read_payload(void* buf, uint8_t data_len)
 {
   uint8_t status;
 
-   // printf("[Reading %u bytes %u blanks]",data_len,blank_len);
-  uint8_t spi_txbuf[33];
-  uint8_t* spi_rxbuf = buf;
+  if (data_len > payload_size) {
+        data_len = payload_size;
+    }
+  uint8_t blank_len = dynamic_payloads_enabled ? 0 : payload_size - data_len;
 
-  for (int i = 0; i < 33; i++) {
-    spi_txbuf[i] = 0xFF;
-    spi_rxbuf[i] = 0xFF;
-  }
-  spi_txbuf[0] = R_RX_PAYLOAD;
-
+  uint8_t tx_buf[1] = {R_RX_PAYLOAD};
+  uint8_t rx_buf[1];
   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_RESET); // NSS1 low
-  HAL_SPI_TransmitReceive(&hspi1, spi_txbuf, spi_rxbuf, 33, 1000);
-  status = spi_rxbuf[0];
+  HAL_SPI_TransmitReceive(&hspi1, tx_buf, rx_buf, 1, 1000);
+  HAL_SPI_Receive(&hspi1, buf, data_len, 1000);
+  HAL_SPI_Transmit(&hspi1, blank_data, blank_len, 1000);
+  status = rx_buf[0];
   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_SET); // NSS1 low
 
   return status;
 }
 
-// TODO Improve this so that a buffer of 32 bytes isn't required.
+
 uint8_t write_payload(uint8_t* buf, uint8_t data_len, const uint8_t writeType)
 {
     uint8_t status;
+    data_len = rf24_min(data_len, payload_size);
+    uint8_t blank_len = dynamic_payloads_enabled ? 0 : payload_size - data_len;
+
 
     //printf("[Writing %u bytes %u blanks]",data_len,blank_len);
     //IF_SERIAL_DEBUG(printf("[Writing %u bytes %u blanks]\n", data_len, blank_len); );
-    uint8_t spi_rxbuf[33];
-  uint8_t* spi_txbuf = buf;
 
-  for (int i = 0; i < 33; i++) {
-    spi_rxbuf[i] = 0xFF;
-  }
-  spi_txbuf[0] = writeType;
-
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_RESET); // NSS1 low
-  HAL_SPI_TransmitReceive(&hspi1, spi_txbuf, spi_rxbuf, 33, 1000);
-  status = spi_rxbuf[0];
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_SET); // NSS1 low
-  return status;
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_RESET); // NSS1 low
+    uint8_t tx_buf[1] = {writeType};
+    uint8_t rx_buf[1];
+    HAL_SPI_TransmitReceive(&hspi1, tx_buf, rx_buf, 1, 1000);
+    HAL_SPI_Transmit(&hspi1, buf, data_len, 1000);
+    HAL_SPI_Transmit(&hspi1, blank_data, blank_len, 1000);
+    status = rx_buf[0];
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_SET); // NSS1 high
+  
+    return status;
 }
 
 

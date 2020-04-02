@@ -5,3 +5,4 @@ build/*
 .clangd/*
 **/*.*~
 **/#*.*#
+**/*_flymake.c

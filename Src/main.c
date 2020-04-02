@@ -153,7 +153,7 @@ int main(void)
 	     
         HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_9);
 	spi_tfbuf[0]++;
-	spi_tfbuf[1]++;
+	//	spi_tfbuf[1]++;
 	
 
 	 
